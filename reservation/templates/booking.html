@@ -1,0 +1,117 @@
+<!-- booking.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="mb-4">Book Ticket</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Train Details</h5>
+                        <p class="card-text">Train: {{ trainName }}</p>
+                        <p class="card-text">Coach Type: {{ coachType }}</p>
+                        <p class="card-text">From Station: {{ fromStation }}</p>
+                        <p class="card-text">To Station: {{ toStation }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Travel Details</h5>
+                        <p class="card-text">Departure Time: {{ departure_time }}</p>
+                        <p class="card-text">Arrival Time: {{ arrival_time }}</p>
+                        <p class="card-text">Number of Seats Available: {{ available_seats|length }}</p>
+                        <p class="card-text">Ticket Price: ₹{{ ticket_price }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form id="bookingForm" method="post" action="#" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <input type="hidden" name="train_name" value="{{ trainName }}">
+            <input type="hidden" name="coach_type" value="{{ coachType }}">
+            <input type="hidden" name="from_station" value="{{ fromStation }}">
+            <input type="hidden" name="to_station" value="{{ toStation }}">
+
+            <div class="mb-3">
+                <label for="num_seats" class="form-label">Number of Passengers:</label>
+                <input type="number" class="form-control" id="num_seats" name="num_seats" min="1" required>
+                
+            </div>
+
+            <div id="passengerFields"></div>
+            <button type="button" class="btn btn-primary" onclick="addPassengerField()">Add Passengers</button>
+
+            <button type="submit" class="btn btn-success">Book</button>
+        </form>
+    </div>
+    <script>
+        const availableSeatNumbers = [{% for seat_number in available_seats %}'{{ seat_number }}',{% endfor %}];
+    
+        function addPassengerField() {
+            const numSeats = document.getElementById('num_seats').value;
+            const totalAvailableSeats = availableSeatNumbers.length;
+            const passengerFieldsDiv = document.getElementById('passengerFields');
+    
+            if (numSeats > totalAvailableSeats) {
+                alert("Error: Number of passengers cannot exceed total available seats.");
+                return;
+            }
+    
+            passengerFieldsDiv.innerHTML = '';
+    
+            for (let i = 1; i <= numSeats; i++) {
+                const passengerContainer = document.createElement('div');
+                passengerContainer.className = 'mb-3';
+    
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.name = `name_${i}`;
+                nameInput.placeholder = 'Name';
+                nameInput.className = 'form-control mb-2';
+                nameInput.required = true;
+    
+                const ageInput = document.createElement('input');
+                ageInput.type = 'number';
+                ageInput.name = `age_${i}`;
+                ageInput.placeholder = 'Age';
+                ageInput.className = 'form-control mb-2';
+                ageInput.required = true;
+    
+                const seatSelectContainer = document.createElement('div');
+                seatSelectContainer.className = 'mb-2';
+    
+                const seatSelectLabel = document.createElement('label');
+                seatSelectLabel.innerText = 'Choose Seat:  ';
+                seatSelectContainer.appendChild(seatSelectLabel);
+    
+                const seatSelect = document.createElement('select');
+                seatSelect.name = `seat_${i}`;
+                seatSelect.className = 'form-select';
+                seatSelect.required = true;
+    
+                for (const seatNumber of availableSeatNumbers) {
+                    const option = document.createElement('option');
+                    option.value = seatNumber;
+                    option.text = seatNumber;
+                    seatSelect.add(option);
+                }
+    
+                seatSelectContainer.appendChild(seatSelect);
+    
+                passengerContainer.appendChild(nameInput);
+                passengerContainer.appendChild(ageInput);
+                passengerContainer.appendChild(seatSelectContainer);
+    
+                passengerFieldsDiv.appendChild(passengerContainer);
+            }
+        }
+    </script>
+{% endblock %}

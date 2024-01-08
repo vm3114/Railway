@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="container mt-5">
+    <h2>Choose Your Seat</h2>
+    <form method="post" action="{% url 'confirm_booking' %}">
+      {% csrf_token %}
+      <label for="seat">Select Seat:</label>
+      <select name="seat" id="seat" required>
+        {% for seat in available_seats %}
+          <option value="{{ seat.id }}">{{ seat.number }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Confirm Booking</button>
+    </form>
+  </div>
+{% endblock %}

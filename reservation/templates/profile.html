@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div class="container mt-5">
+    <div class="profile-container">
+      <h2>User Profile</h2>
+      <hr>
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ account.email }}</p>
+      <p><strong>Balance:</strong> ₹ {{ account.credit }}</p>
+
+      <h3>Add Balance</h3>
+      <form method="post" action="{% url 'add_balance' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="amount">Amount:</label>
+          <input type="number" class="form-control" id="amount" name="amount" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Balance</button>
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

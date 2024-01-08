@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="search-container">
+      <form class="col-6 mx-auto card p-3 shadow-lg" method="post" action="{% url 'search_trains' %}">
+        {% csrf_token %}
+        <h2>Search Trains</h2>
+        <hr>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Search</button>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

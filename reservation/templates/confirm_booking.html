@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Ticket Details</h2>
+
+                <div class="mb-4">
+                    <h5>Train Details</h5>
+                    <p><strong>Train:</strong> {{ trainName }}</p>
+                    <p><strong>Coach Type:</strong> {{ coachType }}</p>
+                    <p><strong>From Station:</strong> {{ fromStation }} ({{ departure_time }})</p>
+                    <p><strong>To Station:</strong> {{ toStation }} ({{ arrival_time }})</p>
+                    <p><strong>Date:</strong> {{ date }}</p>
+                    <p><strong>Number of Seats Booked:</strong> {{ numSeats }}</p>
+                    <p><strong>Total Cost:</strong> ₹{{ totalCost }}</p>
+                </div>
+
+                <div>
+                    <h5>Passenger Details</h5>
+                    {% for passenger in passengers %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title">Passenger {{ forloop.counter }}</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Name:</strong> {{ passenger.name }}</li>
+                                    <li><strong>Age:</strong> {{ passenger.age }}</li>
+                                    <li><strong>Seat Number:</strong> {{ passenger.seat }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

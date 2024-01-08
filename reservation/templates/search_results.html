@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+  <div class="container mt-5">
+    <h2>Search Results</h2>
+    <hr>
+    {% if train_details %}
+      {% for train_detail in train_details %}
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <h3>{{ train_detail.train }}</h3>
+            <p>Departure Time: {{ train_detail.from_stop.time }}</p>
+            <p>Arrival Time: {{ train_detail.to_stop.time }}</p>
+          </div>
+          {% for coach in train_detail.train.coach_set.all %}
+            <div class="col-md-4">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">{{ coach.coach_type }}</h5>
+                  {% if coach|coach_has_available_seats %}
+                    <p class="card-text">Price: ₹{% calculate_price coach train_detail.to_stop train_detail.from_stop %}</p>
+                    <a href="{% url 'book_ticket' coachCode=coach.code trainName=train_detail.train.name fromStation=train_detail.from_stop.station toStation=train_detail.to_stop.station journey_date=train_detail.travel_date %}" class="btn btn-success">Book Now</a>
+                  {% else %}
+                    <p class="card-text text-danger">Not Available</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No trains found for the given search criteria.</p>
+    {% endif %}
+  </div>
+{% endblock %}
